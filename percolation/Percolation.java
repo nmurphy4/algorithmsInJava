@@ -36,8 +36,8 @@ public class Percolation {
             openSites++;
             int uniqueId = mapIndicesToUniqueId(row, col);
             if (row == 1)
-                currentConnectionsWithSink.union(uniqueId, top);
-                currentConnectionsNoSink.union(uniqueId, top);
+                currentConnectionsWithSink.union(uniqueId, TOP);
+                currentConnectionsNoSink.union(uniqueId, TOP);
             if (row == gridDimension)
                 currentConnectionsWithSink.union(uniqueId, bottom);
             if (col > 1 && isOpen(row, col - 1)) {
@@ -79,7 +79,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        return currentConnectionsNoSink.find(top) == currentConnectionsNoSink.find(mapIndicesToUniqueId(row, col));
+        return currentConnectionsNoSink.find(TOP) == currentConnectionsNoSink.find(mapIndicesToUniqueId(row, col));
     }
 
     // returns the number of open sites
@@ -89,6 +89,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return currentConnectionsWithSink.find(top) == currentConnectionsWithSink.find(bottom);
+        return currentConnectionsWithSink.find(TOP) == currentConnectionsWithSink.find(bottom);
     }
 }
