@@ -4,9 +4,10 @@ public class Percolation {
 
     private boolean[][] grid;
     private int gridDimension;
-    private WeightedQuickUnionUF currentConnections;
+    private WeightedQuickUnionUF currentConnectionsWithSink;
+    private WeightedQuickUnionUF currentConnectionsNoSink;
     private int openSites = 0;
-    private final int top = 0;
+    private final static int top = 0;
     private int bottom;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -21,7 +22,8 @@ public class Percolation {
                 grid[i][j] = false;
             }
         }
-        currentConnections = new WeightedQuickUnionUF(gridDimension * gridDimension + 2);
+        currentConnectionsWithSink = new WeightedQuickUnionUF(gridDimension * gridDimension + 2);
+        currentConnectionsNoSink = new WeightedQuickUnionUF(gridDimension * gridDimension + 1);
         bottom = gridDimension * gridDimension + 1;
     }
 
@@ -34,20 +36,25 @@ public class Percolation {
             openSites++;
             int uniqueId = mapIndicesToUniqueId(row, col);
             if (row == 1)
-                currentConnections.union(uniqueId, top);
+                currentConnectionsWithSink.union(uniqueId, top);
+                currentConnectionsNoSink.union(uniqueId, top);
             if (row == gridDimension)
-                currentConnections.union(uniqueId, bottom);
-            if (col - 1 > 0 && isOpen(row, col - 1)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
+                currentConnectionsWithSink.union(uniqueId, bottom);
+            if (col > 1 && isOpen(row, col - 1)) {
+                currentConnectionsWithSink.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
+                currentConnectionsNoSink.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
             }
-            if (row - 1 > 0 && isOpen(row - 1, col)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
+            if (row > 1 && isOpen(row - 1, col)) {
+                currentConnectionsWithSink.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
+                currentConnectionsNoSink.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
             }
-            if (row + 1 <= gridDimension && isOpen(row + 1, col)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
+            if (row < gridDimension && isOpen(row + 1, col)) {
+                currentConnectionsWithSink.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
+                currentConnectionsNoSink.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
             }
-            if (col + 1 <= gridDimension && isOpen(row, col + 1)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
+            if (col < gridDimension && isOpen(row, col + 1)) {
+                currentConnectionsWithSink.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
+                currentConnectionsNoSink.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
             }
         }
     }
@@ -72,7 +79,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        return currentConnections.find(top) == currentConnections.find(mapIndicesToUniqueId(row, col));
+        return currentConnectionsNoSink.find(top) == currentConnectionsNoSink.find(mapIndicesToUniqueId(row, col));
     }
 
     // returns the number of open sites
@@ -82,6 +89,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return currentConnections.find(top) == currentConnections.find(bottom);
+        return currentConnectionsWithSink.find(top) == currentConnectionsWithSink.find(bottom);
     }
 }
