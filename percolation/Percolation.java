@@ -7,7 +7,7 @@ public class Percolation {
     private WeightedQuickUnionUF currentConnectionsWithSink;
     private WeightedQuickUnionUF currentConnectionsNoSink;
     private int openSites = 0;
-    private final static int top = 0;
+    private final static int TOP = 0;
     private int bottom;
 
     // creates n-by-n grid, with all sites initially blocked
