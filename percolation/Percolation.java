@@ -35,9 +35,10 @@ public class Percolation {
             grid[row - 1][col - 1] = true;
             openSites++;
             int uniqueId = mapIndicesToUniqueId(row, col);
-            if (row == 1)
+            if (row == 1) {
                 currentConnectionsWithSink.union(uniqueId, TOP);
                 currentConnectionsNoSink.union(uniqueId, TOP);
+            }
             if (row == gridDimension)
                 currentConnectionsWithSink.union(uniqueId, bottom);
             if (col > 1 && isOpen(row, col - 1)) {
