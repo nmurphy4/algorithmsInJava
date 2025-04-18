@@ -4,13 +4,14 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
-    private static double CONFIDENCE_95 = 1.96;
+    private final static double CONFIDENCE_95 = 1.96;
     private double[] trialResults;
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
-        if (trials < 2)
-            throw new IllegalArgumentException(String.format("You must run at least two trials to create a PercolationStats object, trials = %1$d", trials));
-
+        if (n <= 0) 
+            throw new IllegalArgumentException("Dimensions of grid must be strictly positive");
+        if (trials <= 0) 
+            throw new IllegalArgumentException("Number of trials must be strictly positive");
         double percolationThreshold = 0;
         trialResults = new double[trials];
         for (int i = 0; i < trials; i++) {

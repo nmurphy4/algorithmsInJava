@@ -30,17 +30,22 @@ public class Percolation {
             grid[row - 1][col - 1] = true;
             openSites++;
             int uniqueId = mapIndicesToUniqueId(row, col);
+            int connectedIndex = 0;
             if (col - 1 > 0 && isOpen(row, col - 1)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
+                connectedIndex = mapIndicesToUniqueId(row, col - 1);
+                currentConnections.union(uniqueId, connectedIndex);
             }
             if (row - 1 > 0 && isOpen(row - 1, col)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
+                connectedIndex = mapIndicesToUniqueId(row - 1, col);
+                currentConnections.union(uniqueId, connectedIndex);
             }
             if (row + 1 <= gridDimension && isOpen(row + 1, col)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
+                connectedIndex = mapIndicesToUniqueId(row + 1, col);
+                currentConnections.union(uniqueId, connectedIndex);
             }
             if (col + 1 <= gridDimension && isOpen(row, col + 1)) {
-                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
+                connectedIndex = mapIndicesToUniqueId(row, col + 1);
+                currentConnections.union(uniqueId, connectedIndex);
             }
         }
     }
@@ -71,7 +76,7 @@ public class Percolation {
         if (isOpen(row, col)) {
             while (j <= gridDimension) {
                 if (isOpen(1, j))
-                    status = currentConnections.connected(mapIndicesToUniqueId(1, j), index);
+                    status = currentConnections.find(mapIndicesToUniqueId(1, j)) == currentConnections.find(index);
                 j++;
                 if (status)
                     break;
