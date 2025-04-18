@@ -6,6 +6,8 @@ public class Percolation {
     private int gridDimension;
     private WeightedQuickUnionUF currentConnections;
     private int openSites = 0;
+    private final int top = 0;
+    private int bottom;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -19,7 +21,8 @@ public class Percolation {
                 grid[i][j] = false;
             }
         }
-        currentConnections = new WeightedQuickUnionUF(gridDimension * gridDimension);
+        currentConnections = new WeightedQuickUnionUF(gridDimension * gridDimension + 2);
+        bottom = gridDimension * gridDimension + 1;
     }
 
     // opens the site (row, col) if it is not open already
@@ -30,22 +33,21 @@ public class Percolation {
             grid[row - 1][col - 1] = true;
             openSites++;
             int uniqueId = mapIndicesToUniqueId(row, col);
-            int connectedIndex = 0;
+            if (row == 1)
+                currentConnections.union(uniqueId, top);
+            if (row == gridDimension)
+                currentConnections.union(uniqueId, bottom);
             if (col - 1 > 0 && isOpen(row, col - 1)) {
-                connectedIndex = mapIndicesToUniqueId(row, col - 1);
-                currentConnections.union(uniqueId, connectedIndex);
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
             }
             if (row - 1 > 0 && isOpen(row - 1, col)) {
-                connectedIndex = mapIndicesToUniqueId(row - 1, col);
-                currentConnections.union(uniqueId, connectedIndex);
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
             }
             if (row + 1 <= gridDimension && isOpen(row + 1, col)) {
-                connectedIndex = mapIndicesToUniqueId(row + 1, col);
-                currentConnections.union(uniqueId, connectedIndex);
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
             }
             if (col + 1 <= gridDimension && isOpen(row, col + 1)) {
-                connectedIndex = mapIndicesToUniqueId(row, col + 1);
-                currentConnections.union(uniqueId, connectedIndex);
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
             }
         }
     }
@@ -53,7 +55,7 @@ public class Percolation {
     private int mapIndicesToUniqueId(int row, int col) {
         checkDimension(row);
         checkDimension(col);
-        return gridDimension * (row - 1) + (col - 1);
+        return gridDimension * (row - 1) + col;
     }
     private void checkDimension(int dim) {
         if (dim <= 0 || dim > gridDimension)
@@ -70,19 +72,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        int index = mapIndicesToUniqueId(row, col);
-        boolean status = false;
-        int j = 1;
-        if (isOpen(row, col)) {
-            while (j <= gridDimension) {
-                if (isOpen(1, j))
-                    status = currentConnections.find(mapIndicesToUniqueId(1, j)) == currentConnections.find(index);
-                j++;
-                if (status)
-                    break;
-            }
-        }
-        return status;
+        return currentConnections.find(top) == currentConnections.find(mapIndicesToUniqueId(row, col));
     }
 
     // returns the number of open sites
@@ -92,13 +82,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        boolean p = false;
-        int i = 1;
-        while (!p && i <= gridDimension) {
-            if (isOpen(gridDimension, i))
-                p = isFull(gridDimension, i);
-            i++;
-        }
-        return p;
+        return currentConnections.find(top) == currentConnections.find(bottom);
     }
 }
