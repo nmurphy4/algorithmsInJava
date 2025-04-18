@@ -29,19 +29,19 @@ public class Percolation {
         if (!grid[row - 1][col - 1]) {
             grid[row - 1][col - 1] = true;
             openSites++;
-        }
-        int uniqueId = mapIndicesToUniqueId(row, col);
-        if (col - 1 > 0 && isOpen(row, col - 1)) {
-            currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
-        }
-        if (row - 1 > 0 && isOpen(row - 1, col)) {
-            currentConnections.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
-        }
-        if (row + 1 <= gridDimension && isOpen(row + 1, col)) {
-            currentConnections.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
-        }
-        if (col + 1 <= gridDimension && isOpen(row, col + 1)) {
-            currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
+            int uniqueId = mapIndicesToUniqueId(row, col);
+            if (col - 1 > 0 && isOpen(row, col - 1)) {
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col - 1));
+            }
+            if (row - 1 > 0 && isOpen(row - 1, col)) {
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row - 1, col));
+            }
+            if (row + 1 <= gridDimension && isOpen(row + 1, col)) {
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row + 1, col));
+            }
+            if (col + 1 <= gridDimension && isOpen(row, col + 1)) {
+                currentConnections.union(uniqueId, mapIndicesToUniqueId(row, col + 1));
+            }
         }
     }
 
@@ -69,12 +69,12 @@ public class Percolation {
         boolean status = false;
         int j = 1;
         while (j <= gridDimension) {
-            status = isOpen(1, j) && isOpen(row, col) && currentConnections.find(mapIndicesToUniqueId(1, j)) == currentConnections.find(index);
+            status = isOpen(1, j) && isOpen(row, col) && currentConnections.connected(mapIndicesToUniqueId(1, j), index);
             j++;
             if (status)
                 break;
         }
-        return status && isOpen(row, col);
+        return status;
     }
 
     // returns the number of open sites

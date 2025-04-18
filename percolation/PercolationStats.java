@@ -5,11 +5,12 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
+    private static double CONFIDENCE_95 = 1.96;
     private double[] trialResults;
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
         if (trials < 2)
-            throw new IllegalArgumentException(String.format("You must run at least two trials to create a PercolationStats object, trials = %1$s", trials));
+            throw new IllegalArgumentException(String.format("You must run at least two trials to create a PercolationStats object, trials = %1$d", trials));
 
         double percolationThreshold = 0;
         trialResults = new double[trials];
@@ -46,7 +47,6 @@ public class PercolationStats {
         return StdStats.stddev(trialResults);
     }
 
-    private double CONFIDENCE_95 = 1.96;
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
         return mean() - CONFIDENCE_95 * stddev() / Math.sqrt(trialResults.length);
