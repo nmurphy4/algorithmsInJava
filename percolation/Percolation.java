@@ -68,11 +68,14 @@ public class Percolation {
         int index = mapIndicesToUniqueId(row, col);
         boolean status = false;
         int j = 1;
-        while (j <= gridDimension) {
-            status = isOpen(1, j) && isOpen(row, col) && currentConnections.connected(mapIndicesToUniqueId(1, j), index);
-            j++;
-            if (status)
-                break;
+        if (isOpen(row, col)) {
+            while (j <= gridDimension) {
+                if (isOpen(1, j))
+                    status = currentConnections.connected(mapIndicesToUniqueId(1, j), index);
+                j++;
+                if (status)
+                    break;
+            }
         }
         return status;
     }
@@ -87,7 +90,8 @@ public class Percolation {
         boolean p = false;
         int i = 1;
         while (!p && i <= gridDimension) {
-            p = isFull(gridDimension, i);
+            if (isOpen(gridDimension, i))
+                p = isFull(gridDimension, i);
             i++;
         }
         return p;

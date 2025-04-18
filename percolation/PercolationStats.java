@@ -1,4 +1,3 @@
-import java.lang.Math;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdStats;
@@ -14,8 +13,9 @@ public class PercolationStats {
 
         double percolationThreshold = 0;
         trialResults = new double[trials];
-        for (int i = 0; i < trials; i++)
+        for (int i = 0; i < trials; i++) {
             trialResults[i] = performExperiment(n);
+        }
     }
 
     private void openRandom(int upperBoundExclusive, Percolation p) {
