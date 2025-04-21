@@ -119,5 +119,7 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.print(s);
             StdOut.print("\n");
         }
+        StdOut.printf("Deque size = %1$d\n", deque.size());
+        StdOut.printf("Is deque empty? %1$s\n", deque.isEmpty());
     }
 }
