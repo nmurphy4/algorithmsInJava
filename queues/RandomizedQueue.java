@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdRandom;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class RandomizedQueue<Item> implements Iterable<Item> {
+public class RandomizedQueue < Item > implements Iterable < Item > {
 
     private int size;
     @SuppressWarnings("unchecked")
@@ -45,14 +45,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (size == 1) {
             item = internalArray[0];
             internalArray[0] = null;
-        }
-        else {
+        } else {
             if (size == internalArray.length / 4) resize(internalArray.length / 2);
             int randomIndex = StdRandom.uniformInt(size);
             item = internalArray[randomIndex];
             internalArray[randomIndex] = internalArray[size - 1];
             internalArray[size - 1] = null;
-        } 
+        }
         size--;
         return item;
     }
@@ -69,7 +68,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private class RandomIterator implements Iterator < Item > {
         private int copySize;
         private Item[] copyArray;
-        
+
         public RandomIterator() {
             copySize = size;
             copyArray = (Item[]) new Object[copySize];
@@ -89,8 +88,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (copySize == 1) {
                 item = copyArray[0];
                 copyArray[0] = null;
-            }
-            else {
+            } else {
                 int randomIndex = StdRandom.uniformInt(copySize);
                 item = copyArray[randomIndex];
                 copyArray[randomIndex] = copyArray[copySize - 1];
@@ -102,26 +100,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
 
-        RandomizedQueue<Integer> queue1 = new RandomizedQueue<Integer>();
-        RandomizedQueue<Integer> queue2 = new RandomizedQueue<Integer>();
+        RandomizedQueue < Integer > queue1 = new RandomizedQueue < Integer > ();
+        RandomizedQueue < Integer > queue2 = new RandomizedQueue < Integer > ();
         for (int i = 0; i <= 10; i++) {
             queue1.enqueue(i);
             queue2.enqueue(i);
         }
         StdOut.printf("RandomizedQueue size = %1$d\n", queue1.size());
         StdOut.printf("Is dequeue empty? %1$s\n", queue2.isEmpty());
-        
+
         StdOut.println("Checking that dequeue is random");
         StdOut.println(queue1.dequeue());
         StdOut.println(queue2.dequeue());
-    
+
         StdOut.println("checking that two different iterators iterate in indepently random order");
-        for (int s : queue1)  {
+        for (int s: queue1) {
             StdOut.print(s);
             StdOut.print(" ");
         }
         StdOut.print("\n");
-        for (int s : queue1)  {
+        for (int s: queue1) {
             StdOut.print(s);
             StdOut.print(" ");
         }

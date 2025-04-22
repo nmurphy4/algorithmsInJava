@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable<Item> {
+public class Deque < Item > implements Iterable < Item > {
 
     private Node first;
     private Node last;
@@ -32,8 +32,7 @@ public class Deque<Item> implements Iterable<Item> {
             first = new Node();
             first.item = item;
             last = first;
-        }
-        else {
+        } else {
             Node newFirst = new Node();
             Node oldFirst = first;
             newFirst.next = oldFirst;
@@ -51,8 +50,7 @@ public class Deque<Item> implements Iterable<Item> {
             last = new Node();
             last.item = item;
             first = last;
-        }
-        else {
+        } else {
             Node newLast = new Node();
             Node oldLast = last;
             newLast.item = item;
@@ -102,7 +100,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        Deque<String> deque = new Deque<String>();
+        Deque < String > deque = new Deque < String > ();
         String first = "My";
         String last = "Expected";
         deque.addFirst("As");
@@ -115,7 +113,7 @@ public class Deque<Item> implements Iterable<Item> {
         String newFirst = deque.removeFirst();
         deque.addFirst(newFirst);
 
-        for (String s : deque)  {
+        for (String s: deque) {
             StdOut.print(s);
             StdOut.print("\n");
         }
