@@ -1,22 +1,18 @@
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private class Node {
-        Item item;
-        Node next;
-        Node previous;
-    }
-    private Node first;
-    private Node last;
     private int size;
-    private Node[] internalArray = (Node[]) new Object[1];
+    @SuppressWarnings("unchecked")
+    private Item[] internalArray = (Item[]) new Object[1];
 
     private void resize(int max) {
+        @SuppressWarnings("unchecked")
         Item[] temp = (Item[]) new Object[max];
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < size; i++) {
             temp[i] = internalArray[i];
         }
         internalArray = temp;
@@ -37,78 +33,98 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null)
             throw new IllegalArgumentException("Cannot add null to the queue");
 
-        Node newNode = new Node();
-        newNode.item = item;
-
-        if (size == 0) {
-            first = newNode;
-            last = first;
-        }
-        else {
-            if (size == internalArray.length) resize(2 * a.length);
-            oldFirst = first;
-            first = newNode;    
-            newNode.next = oldFirst;
-            oldFirst.previous = first;
-        }
-
-        internalArray[size] = first;
+        if (size == internalArray.length) resize(2 * internalArray.length);
+        internalArray[size] = item;
         size++;
-    }
-
-    private Node getRandomElement() {
-        int randomIndex = StdRandom.uniqueInt(internalArray.length);
-        Node randomlyAccessedNode = internalArray[randomIndex];
-        if (randomlyAccessedNode == null) return getRandomElement()
-        else 
-            return randomlyAccessedNode;
     }
 
     public Item dequeue() {
         if (isEmpty())
             throw new NoSuchElementException("Cannot call dequeue on an empty RandomizedQueue");
         Item item;
-        if (size > 0 && size == internalArray.length / 4) resize(internalArray.length / 2);
-        Node randomlyAccessedNode = getRandomElement();
-        else {
-            item = randomlyAccessedNode.item;
-            internalArray[randomIndex] = null;
-            Node previous = randomlyAccessedNode.previous;
-            Node next = randomlyAccessedNode.next;
-            previous.next = next;
-            next.previous = previous;
+        if (size == 1) {
+            item = internalArray[0];
+            internalArray[0] = null;
         }
+        else {
+            if (size == internalArray.length / 4) resize(internalArray.length / 2);
+            int randomIndex = StdRandom.uniformInt(size);
+            item = internalArray[randomIndex];
+            internalArray[randomIndex] = internalArray[size - 1];
+            internalArray[size - 1] = null;
+        } 
         size--;
         return item;
     }
 
     public Item sample() {
-        if (isEmpty())
-            throw new NoSuchElementException("Cannot call removeFirst on an empty queue");
+        int randomIndex = StdRandom.uniformInt(size);
+        return internalArray[randomIndex];
     }
 
     public Iterator < Item > iterator() {
-        return new ListIterator();
+        return new RandomIterator();
     }
 
-    private class ListIterator implements Iterator < Item > {
-        public boolean hasNext() 
+    private class RandomIterator implements Iterator < Item > {
+        private int copySize;
+        private Item[] copyArray;
+        
+        public RandomIterator() {
+            copySize = size;
+            copyArray = (Item[]) new Object[copySize];
+            for (int i = 0; i < size; i++)
+                copyArray[i] = internalArray[i];
+        }
+        public boolean hasNext() {
+            return copySize > 0;
+        }
         public void remove() {
             throw new UnsupportedOperationException("method remove() is not implemented on RandomizedQueue");
         }
         public Item next() {
-            if (first.next == null)
-                throw NoSuchElementException("Cannot call next() on an exhausted RandomizedQueue")
+            if (copySize == 0)
+                throw new NoSuchElementException("Cannot call next() on an exhausted RandomizedQueue");
+            Item item;
+            if (copySize == 1) {
+                item = copyArray[0];
+                copyArray[0] = null;
+            }
+            else {
+                int randomIndex = StdRandom.uniformInt(copySize);
+                item = copyArray[randomIndex];
+                copyArray[randomIndex] = copyArray[copySize - 1];
+            };
+            copySize--;
+            return item;
         }
     }
 
     public static void main(String[] args) {
 
-        for (String s : deque)  {
-            StdOut.print(s);
-            StdOut.print("\n");
+        RandomizedQueue<Integer> queue1 = new RandomizedQueue<Integer>();
+        RandomizedQueue<Integer> queue2 = new RandomizedQueue<Integer>();
+        for (int i = 0; i <= 10; i++) {
+            queue1.enqueue(i);
+            queue2.enqueue(i);
         }
-        StdOut.printf("Deque size = %1$d\n", deque.size());
-        StdOut.printf("Is deque empty? %1$s\n", deque.isEmpty());
+        StdOut.printf("RandomizedQueue size = %1$d\n", queue1.size());
+        StdOut.printf("Is dequeue empty? %1$s\n", queue2.isEmpty());
+        
+        StdOut.println("Checking that dequeue is random");
+        StdOut.println(queue1.dequeue());
+        StdOut.println(queue2.dequeue());
+    
+        StdOut.println("checking that two different iterators iterate in indepently random order");
+        for (int s : queue1)  {
+            StdOut.print(s);
+            StdOut.print(" ");
+        }
+        StdOut.print("\n");
+        for (int s : queue1)  {
+            StdOut.print(s);
+            StdOut.print(" ");
+        }
+        StdOut.print("\n");
     }
 }
