@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable <Item> {
+public class Deque<Item> implements Iterable<Item> {
 
     private Node first;
     private Node last;
@@ -31,13 +31,24 @@ public class Deque<Item> implements Iterable <Item> {
         if (size == 0) {
             first = new Node();
             first.item = item;
-            last = first;
-        } else {
+        } 
+        else if (size == 1) {
+            Node newLast = new Node();
             Node newFirst = new Node();
-            Node oldFirst = first;
+            newLast = first;
+            first = newFirst;
+            first.item = item;
+            first.next = last;
+            newLast.previous = first;
+            last = newLast;
+        }
+        else {
+            Node newFirst = new Node();
+            Node oldFirst = new Node();
+            first.previous = newFirst;
+            oldFirst = first;
             newFirst.next = oldFirst;
             newFirst.item = item;
-            oldFirst.previous = newFirst;
             first = newFirst;
         }
         size++;
@@ -47,45 +58,58 @@ public class Deque<Item> implements Iterable <Item> {
         if (item == null)
             throw new IllegalArgumentException("Cannot add null to the queue");
         if (size == 0) {
-            last = new Node();
-            last.item = item;
-            first = last;
-        } else {
+            Node newFirst = new Node();
+            newFirst.item = item;
+            first = newFirst;
+        } 
+        else if (size == 1) {
+            Node newLast = new Node();
+            first.next = newLast;
+            newLast.previous = first;
+            newLast.item = item;
+            last = newLast;
+        }
+        else {
             Node newLast = new Node();
             Node oldLast = last;
             newLast.item = item;
-            last = newLast;
             oldLast.next = newLast;
             newLast.previous = oldLast;
+            last = newLast;
         }
         size++;
     }
 
     public Item removeFirst() {
         if (isEmpty())
-            throw new NoSuchElementException("Cannot call removeFirst on an empty queue");
+            throw new NoSuchElementException("Cannot call removeFirst() on an empty queue");
         Item item = first.item;
         first = first.next;
-        first.previous = null;
+        if (size > 1) first.previous = null;
         size--;
         return item;
     }
 
     public Item removeLast() {
         if (isEmpty())
-            throw new NoSuchElementException("Cannot call removeLast on an empty queue");
-        Item item = last.item;
-        last = last.previous;
-        last.next = null;
-        size--;
+            throw new NoSuchElementException("Cannot call removeLast() on an empty queue");
+        Item item;
+        if (size == 1)
+            item = removeFirst();
+        else {
+            item = last.item;
+            last = last.previous;
+            last.next = null;
+            size--;
+        }
         return item;
     }
 
-    public Iterator < Item > iterator() {
+    public Iterator<Item> iterator() {
         return new ListIterator();
     }
 
-    private class ListIterator implements Iterator < Item > {
+    private class ListIterator implements Iterator<Item> {
         public boolean hasNext() {
             return first != null;
         }
@@ -102,7 +126,7 @@ public class Deque<Item> implements Iterable <Item> {
     }
 
     public static void main(String[] args) {
-        Deque<String> deque = new Deque <String> ();
+        Deque<String> deque = new Deque<String>();
         String first = "My";
         String last = "Expected";
         deque.addFirst("As");
@@ -121,5 +145,17 @@ public class Deque<Item> implements Iterable <Item> {
         }
         StdOut.printf("Deque size = %1$d\n", deque.size());
         StdOut.printf("Is deque empty? %1$s\n", deque.isEmpty());
+        
+        StdOut.println("Testing the adding one element and calling removeFirst() or removeLast() works");
+
+        Deque<String> deque2 = new Deque<String>();
+        deque2.addFirst("first");
+        StdOut.println(deque2.removeFirst());
+        deque2.addFirst("first");
+        StdOut.println(deque2.removeLast());
+        deque2.addLast("Last");
+        StdOut.println(deque2.removeFirst());
+        deque2.addLast("Last");
+        StdOut.println(deque2.removeLast());
     }
 }

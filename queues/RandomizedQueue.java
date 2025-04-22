@@ -8,15 +8,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size;
     private Item[] internalArray = (Item[]) new Object[1];
 
+    
+    public RandomizedQueue() {
+        size = 0;
+    }
+
     private void resize(int max) {
         Item[] temp = (Item[]) new Object[max];
         for (int i = 0; i < size; i++) {
             temp[i] = internalArray[i];
         }
         internalArray = temp;
-    }
-    public RandomizedQueue() {
-        size = 0;
     }
 
     public boolean isEmpty() {
@@ -59,11 +61,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return internalArray[randomIndex];
     }
 
-    public Iterator < Item > iterator() {
+    public Iterator<Item> iterator() {
         return new RandomIterator();
     }
 
-    private class RandomIterator implements Iterator < Item > {
+    private class RandomIterator implements Iterator<Item> {
         private int copySize;
         private Item[] copyArray;
 
@@ -98,8 +100,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
 
-        RandomizedQueue <Integer> queue1 = new RandomizedQueue <Integer> ();
-        RandomizedQueue <Integer> queue2 = new RandomizedQueue <Integer> ();
+        RandomizedQueue<Integer> queue1 = new RandomizedQueue<Integer>();
+        RandomizedQueue<Integer> queue2 = new RandomizedQueue<Integer>();
         for (int i = 0; i <= 10; i++) {
             queue1.enqueue(i);
             queue2.enqueue(i);
