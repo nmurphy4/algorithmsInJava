@@ -92,7 +92,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 int randomIndex = StdRandom.uniformInt(copySize);
                 item = copyArray[randomIndex];
                 copyArray[randomIndex] = copyArray[copySize - 1];
-            };
+            }
             copySize--;
             return item;
         }

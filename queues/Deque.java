@@ -117,8 +117,7 @@ public class Deque<Item> implements Iterable<Item> {
         public Item next() {
             if (!hasNext()) 
                 throw new NoSuchElementException("Cannot call next() on an exhausted Dequeue iterator");
-            Item item = first.item;
-            first = first.next;
+            Item item = removeFirst();
             return item;
         }
     }
@@ -144,22 +143,32 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.printf("Deque size = %1$d\n", deque.size());
         StdOut.printf("Is deque empty? %1$s\n", deque.isEmpty());
         
-        StdOut.println("Testing the adding one element and calling removeFirst() or removeLast() works");
+        StdOut.println("Testing that adding one element and calling removeFirst() or removeLast() works");
 
         Deque<String> deque2 = new Deque<String>();
         deque2.addFirst("first");
-        StdOut.println(deque2.removeFirst());
         deque2.addFirst("first");
-        StdOut.println(deque2.removeLast());
+        deque2.removeLast();
         deque2.addLast("Last");
-        StdOut.println(deque2.removeFirst());
+        deque2.removeFirst();
         deque2.addLast("Last");
-        StdOut.println(deque2.removeLast());
+        deque2.removeLast();
 
         StdOut.println("Check that two addFirst() calls followed by a removeFirst() works");
         Deque<String> deque3 = new Deque<String>();
         deque3.addFirst("one");
         deque3.addFirst("two");
-        StdOut.println(deque3.removeFirst());
+        StdOut.printf("Expected = two, actual = %1$s\n", deque3.removeFirst());
+
+        StdOut.println("Check that adding to dequeue, then iterating, then adding again works");
+        Deque<String> deque4 = new Deque<String>();
+        deque4.addFirst("one");
+        deque4.addFirst("two");
+        for (String s : deque4) 
+            StdOut.println(s);
+        deque4.addFirst("three");
+        StdOut.printf("Expected = three, actual = %1$s\n", deque4.removeFirst());
     }
+
+   
 }
