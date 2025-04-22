@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque < Item > implements Iterable < Item > {
+public class Deque<Item> implements Iterable <Item> {
 
     private Node first;
     private Node last;
@@ -102,7 +102,7 @@ public class Deque < Item > implements Iterable < Item > {
     }
 
     public static void main(String[] args) {
-        Deque < String > deque = new Deque < String > ();
+        Deque<String> deque = new Deque <String> ();
         String first = "My";
         String last = "Expected";
         deque.addFirst("As");
