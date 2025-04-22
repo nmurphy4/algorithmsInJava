@@ -93,6 +93,8 @@ public class Deque < Item > implements Iterable < Item > {
             throw new UnsupportedOperationException("method remove is not implemented on Deque");
         }
         public Item next() {
+            if (!hasNext()) 
+                throw new NoSuchElementException("Cannot call next() on an exhausted Dequeue iterator");
             Item item = first.item;
             first = first.next;
             return item;
