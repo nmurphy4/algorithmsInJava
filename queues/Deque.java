@@ -33,20 +33,18 @@ public class Deque<Item> implements Iterable<Item> {
             first.item = item;
         } 
         else if (size == 1) {
-            Node newLast = new Node();
             Node newFirst = new Node();
-            newLast = first;
+            Node newLast = first;
             first = newFirst;
             first.item = item;
-            first.next = last;
+            first.next = newLast;
             newLast.previous = first;
             last = newLast;
         }
         else {
             Node newFirst = new Node();
-            Node oldFirst = new Node();
             first.previous = newFirst;
-            oldFirst = first;
+            Node oldFirst = first;
             newFirst.next = oldFirst;
             newFirst.item = item;
             first = newFirst;
@@ -157,5 +155,11 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println(deque2.removeFirst());
         deque2.addLast("Last");
         StdOut.println(deque2.removeLast());
+
+        StdOut.println("Check that two addFirst() calls followed by a removeFirst() works");
+        Deque<String> deque3 = new Deque<String>();
+        deque3.addFirst("one");
+        deque3.addFirst("two");
+        StdOut.println(deque3.removeFirst());
     }
 }
