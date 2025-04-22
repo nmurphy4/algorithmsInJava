@@ -108,8 +108,13 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
+        private Node current;
+    
+        public ListIterator() {
+            current=first;
+        }
         public boolean hasNext() {
-            return first != null;
+            return current != null;
         }
         public void remove() {
             throw new UnsupportedOperationException("method remove is not implemented on Deque");
@@ -117,7 +122,8 @@ public class Deque<Item> implements Iterable<Item> {
         public Item next() {
             if (!hasNext()) 
                 throw new NoSuchElementException("Cannot call next() on an exhausted Dequeue iterator");
-            Item item = removeFirst();
+            Item item = current.item;
+            current = current.next;
             return item;
         }
     }
@@ -168,6 +174,16 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.println(s);
         deque4.addFirst("three");
         StdOut.printf("Expected = three, actual = %1$s\n", deque4.removeFirst());
+
+        StdOut.println("Check that iterating of deque does not exhuast it");
+        Deque<Integer> deque5 = new Deque<Integer>();
+        deque5.addFirst(1);
+        deque5.addFirst(2);
+        deque5.addFirst(3);
+        deque5.addFirst(4);
+        for (int i : deque5) 
+            StdOut.println(i);
+        StdOut.printf("Expected = 4, actual = %1$s\n", deque5.removeFirst());
     }
 
    
