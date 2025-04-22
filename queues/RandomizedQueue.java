@@ -57,6 +57,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public Item sample() {
+        if (isEmpty())
+            throw new NoSuchElementException("Cannot call sample() on an empty RandomizedQueue");
         int randomIndex = StdRandom.uniformInt(size);
         return internalArray[randomIndex];
     }
@@ -92,6 +94,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 int randomIndex = StdRandom.uniformInt(copySize);
                 item = copyArray[randomIndex];
                 copyArray[randomIndex] = copyArray[copySize - 1];
+                copyArray[copySize - 1] = null;
             }
             copySize--;
             return item;
